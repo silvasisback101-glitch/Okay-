@@ -1,0 +1,23 @@
+name: Build Windows EXE
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pillow pyautogui pydirectinput websockets pyinstaller opencv-python pyaudio psutil keyboard pywin32
+      - name: Build EXE (console enabled)
+        run: pyinstaller --onefile main.py
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-exe
+          path: dist/main.exe
